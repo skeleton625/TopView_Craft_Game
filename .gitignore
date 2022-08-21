@@ -2,6 +2,8 @@
 *.csproj
 .vsconfig
 .git
+.vs/
+obj/
 Logs/
 Library/
 UserSettings/
