@@ -42,10 +42,6 @@ public class Human : MonoBehaviour
                 isTurn = false;
                 humanAnimator.SetBool(TURN, false);
 
-                var position = prePosition;
-                position.y = transform.position.y;
-                transform.LookAt(position);
-
                 humanAgent.isStopped = false;
             }
         }
@@ -58,6 +54,8 @@ public class Human : MonoBehaviour
 
     public void MovePosition(Vector3 position)
     {
+        if (isTurn) return;
+
         humanPath = new NavMeshPath();
         humanAgent.CalculatePath(position, humanPath);
         if (humanPath.status == NavMeshPathStatus.PathComplete)
@@ -69,6 +67,11 @@ public class Human : MonoBehaviour
                 humanAnimator.SetBool(TURN, true);
 
                 humanAgent.isStopped = true;
+            }
+            else
+            {
+                position.y = transform.position.y;
+                transform.LookAt(position);
             }
 
             isArrived = false;
