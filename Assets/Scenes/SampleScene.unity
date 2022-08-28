@@ -870,6 +870,7 @@ GameObject:
   - component: {fileID: 919132148403271984}
   - component: {fileID: 919132148403271985}
   - component: {fileID: 919132148403271986}
+  - component: {fileID: 919132148403271987}
   m_Layer: 0
   m_Name: Humanoid
   m_TagString: Untagged
@@ -886,7 +887,7 @@ Animator:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 919132148403271983}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
+  m_Avatar: {fileID: 9000000, guid: 783f59b1fdb7ceb4da7f5d03ac102352, type: 3}
   m_Controller: {fileID: 9100000, guid: c86b47d866a7e124c88686514c071f4a, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
@@ -931,6 +932,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e0a7f5a90d6d0544823d72affa56c01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!65 &919132148403271987
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919132148403271983}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!4 &1031632035630832072
 Transform:
   m_ObjectHideFlags: 0
