@@ -1,44 +1,80 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine.AI;
 using UnityEngine;
 
 [RequireComponent(typeof(NavMeshAgent)), RequireComponent(typeof(Animator))]
 public class Human : MonoBehaviour
 {
-    private readonly string SPEED = "_Speed";
+    private readonly string Run = "_Running";
+    private readonly string TURN = "_Turn";
+
+    private bool isTurn = false;
+    private bool isArrived = false;
 
     private float preSpeed = 0f;
-    private NavMeshAgent humanAgent = null;
+    private Vector3 prePosition = Vector3.zero;
+
     private Animator humanAnimator = null;
+    private NavMeshAgent humanAgent = null;
+    private NavMeshPath humanPath = null;
 
     private void Start()
     {
         humanAgent = GetComponent<NavMeshAgent>();
         humanAnimator = GetComponent<Animator>();
         preSpeed = humanAgent.speed;
+
+        prePosition = transform.position;
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         HandleAnimation();
     }
 
     private void HandleAnimation()
     {
-        var speed = Mathf.Clamp01(humanAgent.velocity.sqrMagnitude / preSpeed);
-        humanAnimator.SetFloat(SPEED, speed);
+        if (isArrived) return;
+
+        if (isTurn)
+        {
+            if (humanAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= .9f)
+            {
+                isTurn = false;
+                humanAnimator.SetBool(TURN, false);
+
+                var position = prePosition;
+                position.y = transform.position.y;
+                transform.LookAt(position);
+
+                humanAgent.isStopped = false;
+            }
+        }
+        else if (humanAgent.remainingDistance < humanAgent.stoppingDistance)
+        {
+            isArrived = true;
+            humanAnimator.SetBool(Run, false);
+        }
     }
 
     public void MovePosition(Vector3 position)
     {
-        var path = new NavMeshPath();
-        humanAgent.CalculatePath(position, path);
-        if (path.status == NavMeshPathStatus.PathComplete)
+        humanPath = new NavMeshPath();
+        humanAgent.CalculatePath(position, humanPath);
+        if (humanPath.status == NavMeshPathStatus.PathComplete)
         {
-            position.y = transform.position.y;
-            humanAgent.SetPath(path);
-            transform.LookAt(position);
+            var speed = Mathf.Clamp01(humanAgent.velocity.sqrMagnitude / preSpeed);
+            if (speed > 0 && Vector3.Angle(position - transform.position, prePosition - transform.position) > 120f)
+            {
+                isTurn = true;
+                humanAnimator.SetBool(TURN, true);
+
+                humanAgent.isStopped = true;
+            }
+
+            isArrived = false;
+            humanAnimator.SetBool(Run, true);
+            humanAgent.SetPath(humanPath);
+            prePosition = position;
         }
     }
 }
