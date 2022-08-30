@@ -26,26 +26,16 @@ public class Human : MonoBehaviour
         prePosition = transform.position;
     }
 
-    private void LateUpdate()
+    private void Update()
     {
         HandleAnimation();
     }
 
     private void HandleAnimation()
     {
-        if (isArrived) return;
+        if (isArrived || isTurn) return;
 
-        if (isTurn)
-        {
-            if (humanAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= .9f)
-            {
-                isTurn = false;
-                humanAnimator.SetBool(TURN, false);
-
-                humanAgent.isStopped = false;
-            }
-        }
-        else if (humanAgent.remainingDistance < humanAgent.stoppingDistance)
+        if (humanAgent.remainingDistance < humanAgent.stoppingDistance)
         {
             isArrived = true;
             humanAnimator.SetBool(Run, false);
@@ -54,7 +44,7 @@ public class Human : MonoBehaviour
 
     public void MovePosition(Vector3 position)
     {
-        if (isTurn) return;
+        if (isTurn || prePosition.Equals(position)) return;
 
         humanPath = new NavMeshPath();
         humanAgent.CalculatePath(position, humanPath);
@@ -65,7 +55,6 @@ public class Human : MonoBehaviour
             {
                 isTurn = true;
                 humanAnimator.SetBool(TURN, true);
-
                 humanAgent.isStopped = true;
             }
             else
@@ -79,5 +68,12 @@ public class Human : MonoBehaviour
             humanAgent.SetPath(humanPath);
             prePosition = position;
         }
+    }
+
+    public void EndTurn()
+    {
+        isTurn = false;
+        humanAnimator.SetBool(TURN, false);
+        humanAgent.isStopped = false;
     }
 }
