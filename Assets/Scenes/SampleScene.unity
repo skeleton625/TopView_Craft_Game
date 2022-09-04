@@ -876,6 +876,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ceefd47744320f428729a16ad0f7ed7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UpVector: {x: -1, y: 0, z: -1}
+  RightVector: {x: -1, y: 0, z: 1}
   RigidbodySpeed: 10
 --- !u!54 &919132148403271989
 Rigidbody:
